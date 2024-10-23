@@ -1,0 +1,167 @@
+public class Human {
+    private String name;
+    private Transport currentTransport;
+
+    public Human(String name) {
+        this.name = name;
+        this.currentTransport = null; // Изначально человек идет пешком
+    }
+
+    public void setTransport(Transport transport) {
+        if (transport != null) {
+            System.out.println(name + " сел на " + transport.getType());
+        } else {
+            System.out.println(name + " слез с транспорта.");
+        }
+        this.currentTransport = transport;
+    }
+
+    public void move(String terrain, int distance) {
+        if (currentTransport == null) {
+            System.out.println(name + " идет пешком по " + terrain + " на расстояние " + distance + " км.");
+        } else if (currentTransport.move(terrain, distance)) {
+            System.out.println(name + " переместился на " + currentTransport.getType() + " по " + terrain + " на расстояние " + distance + " км.");
+        } else {
+            System.out.println("Невозможно переместиться на " + currentTransport.getType() + " по " + terrain + ".");
+        }
+    }
+}
+public abstract class Transport {
+    protected String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public abstract boolean move(String terrain, int distance);
+}
+public class Car extends Transport {
+    private int fuel;
+
+    public Car(int fuel) {
+        this.type = "Машина";
+        this.fuel = fuel;
+    }
+
+    @Override
+    public boolean move(String terrain, int distance) {
+        if (terrain.equals("густой лес") || terrain.equals("болото")) {
+            return false;
+        }
+        if (fuel >= distance) {
+            fuel -= distance;
+            return true;
+        } else {
+            System.out.println("Недостаточно бензина.");
+            return false;
+        }
+    }
+}
+public class Car extends Transport {
+    private int fuel;
+
+    public Car(int fuel) {
+        this.type = "Машина";
+        this.fuel = fuel;
+    }
+
+    @Override
+    public boolean move(String terrain, int distance) {
+        if (terrain.equals("густой лес") || terrain.equals("болото")) {
+            return false;
+        }
+        if (fuel >= distance) {
+            fuel -= distance;
+            return true;
+        } else {
+            System.out.println("Недостаточно бензина.");
+            return false;
+        }
+    }
+}
+public class Horse extends Transport {
+    private int stamina;
+
+    public Horse(int stamina) {
+        this.type = "Лошадь";
+        this.stamina = stamina;
+    }
+
+    @Override
+    public boolean move(String terrain, int distance) {
+        if (terrain.equals("болото")) {
+            return false;
+        }
+        if (stamina >= distance) {
+            stamina -= distance;
+            return true;
+        } else {
+            System.out.println("Лошадь устала.");
+            return false;
+        }
+    }
+}
+public class Bicycle extends Transport {
+    public Bicycle() {
+        this.type = "Велосипед";
+    }
+
+    @Override
+    public boolean move(String terrain, int distance) {
+        return !terrain.equals("болото");
+    }
+}
+public class AllTerrainVehicle extends Transport {
+    private int fuel;
+
+    public AllTerrainVehicle(int fuel) {
+        this.type = "Вездеход";
+        this.fuel = fuel;
+    }
+
+    @Override
+    public boolean move(String terrain, int distance) {
+        if (fuel >= distance) {
+            fuel -= distance;
+            return true;
+        } else {
+            System.out.println("Недостаточно бензина для вездехода.");
+            return false;
+        }
+    }
+}
+package Homework_Car;
+
+public class Main {
+    public static void main(String[] args) {
+        Human human = new Human("Гоша");
+
+        Car car = new Car(50);
+        Horse horse = new Horse(30);
+        Bicycle bicycle = new Bicycle();
+        AllTerrainVehicle atv = new AllTerrainVehicle(100);
+
+
+        human.setTransport(car);
+        human.move("равнина", 10);
+        human.move("густой лес", 5);
+
+
+        human.setTransport(horse);
+        human.move("равнина", 15);
+        human.move("болото", 5);
+
+
+        human.setTransport(bicycle);
+        human.move("равнина", 20);
+        human.move("болото", 5);
+
+
+        human.setTransport(atv);
+        human.move("болото", 30);
+
+
+        human.setTransport(null);
+        human.move("равнина", 10);
+    }
+}
